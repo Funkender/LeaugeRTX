@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>League RTX — Fan-Konzept & Visual Comparison</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter für klare NVIDIA-ähnliche Sans-Serif-Typografie -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    },
+                    colors: {
+                        nv: {
+                            green: '#76B900',      // Klassisches NVIDIA-Grün
+                            greenHover: '#84cc00', // Hellere Akzent-Stufe
+                            black: '#000000',      // Reines Schwarz für maximalen Kontrast
+                            dark: '#0E0E0E',       // Tiefes Dunkelgrau für Sektionen
+                            card: '#161616',       // Karten-Hintergrund wie im GeForce Community Portal
+                            border: '#2A2A2A',     // Feine Trennlinien
+                            muted: '#999999'       // Neutrales Sekundärgrau
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* NVIDIA GeForce Community Portal inspirierter Hintergrund */
+        .nv-portal-bg {
+            background-color: #070707;
+            background-image: 
+                /* Subtiles GeForce-Grün oben links & unten rechts */
+                radial-gradient(circle at 15% 10%, rgba(118, 185, 0, 0.14) 0%, transparent 45%),
+                radial-gradient(circle at 88% 75%, rgba(118, 185, 0, 0.10) 0%, transparent 50%),
+                /* Diagonale geometrische Lichtbahnen im GeForce-Stil */
+                linear-gradient(125deg, transparent 0%, transparent 38%, rgba(118, 185, 0, 0.04) 38.2%, rgba(255, 255, 255, 0.02) 52%, transparent 52.2%),
+                linear-gradient(125deg, transparent 0%, transparent 68%, rgba(255, 255, 255, 0.025) 68.2%, rgba(118, 185, 0, 0.03) 82%, transparent 82.2%),
+                /* Feines technisches Micro-Mesh */
+                radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 24px 24px;
+            background-attachment: fixed;
+        }
+
+        /* Hero-Banner im GeForce Community Portal Look (dunkler Verlauf + markante grüne Kante) */
+        .nv-portal-hero {
+            background: 
+                linear-gradient(115deg, rgba(10, 10, 10, 0.96) 0%, rgba(18, 22, 12, 0.90) 55%, rgba(118, 185, 0, 0.16) 100%),
+                repeating-linear-gradient(
+                    -45deg,
+                    rgba(255, 255, 255, 0.015) 0px,
+                    rgba(255, 255, 255, 0.015) 2px,
+                    transparent 2px,
+                    transparent 12px
+                );
+        }
+    </style>
+</head>
+<body class="nv-portal-bg text-white font-sans antialiased selection:bg-nv-green selection:text-black min-h-screen flex flex-col">
+
+    <!-- Top-Navigation im klaren NVIDIA-Stil -->
+    <header class="border-b border-nv-border bg-nv-black/90 backdrop-blur-md sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <!-- Kleiner grüner Akzentbalken -->
+                <span class="w-1.5 h-5 bg-nv-green inline-block"></span>
+                <span class="font-extrabold tracking-tight text-white text-lg uppercase">
+                    League <span class="text-nv-green">RTX</span>
+                </span>
+                <span class="hidden sm:inline-block text-nv-border">|</span>
+                <span data-i18n="navSubtitle" class="hidden sm:inline-block text-xs font-medium tracking-wider uppercase text-nv-muted">
+                    Community Fan-Projekt
+                </span>
+            </div>
+
+            <div class="flex items-center space-x-3 sm:space-x-4">
+                <span id="counter-badge" class="text-xs font-bold uppercase tracking-wider px-3 py-1 bg-nv-card border border-nv-border text-nv-green rounded">
+                    02 Vergleiche
+                </span>
+
+                <!-- DE / EN Sprachumschalter im NVIDIA-Stil -->
+                <div class="inline-flex items-center bg-nv-card border border-nv-border rounded p-0.5" role="group" aria-label="Language Switcher">
+                    <button id="btn-de" onclick="setLanguage('de')" class="px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded transition-colors bg-nv-green text-black">
+                        DE
+                    </button>
+                    <button id="btn-en" onclick="setLanguage('en')" class="px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded transition-colors text-zinc-400 hover:text-white">
+                        EN
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero-Sektion im GeForce Community Portal Stil -->
+    <section class="relative nv-portal-hero border-b border-nv-border pt-14 pb-12 sm:pt-20 sm:pb-16 px-4 sm:px-8 overflow-hidden">
+        <!-- Typische diagonale GeForce-Akzentlinien rechts im Hintergrund -->
+        <div class="pointer-events-none absolute inset-y-0 right-0 w-1/2 overflow-hidden opacity-40">
+            <div class="absolute -right-20 top-0 h-full w-48 -skew-x-[28deg] bg-gradient-to-b from-nv-green/20 via-nv-green/5 to-transparent border-l border-nv-green/30"></div>
+            <div class="absolute right-36 top-0 h-full w-24 -skew-x-[28deg] bg-gradient-to-b from-white/5 to-transparent border-l border-white/10"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="max-w-3xl">
+                <p data-i18n="heroEyebrow" class="text-nv-green font-bold text-xs sm:text-sm uppercase tracking-[0.15em] mb-3">
+                    Visual Concept &amp; Lighting Study
+                </p>
+                <h1 data-i18n="heroTitle" class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-[1.1] mb-5">
+                    Wie sähe League of Legends mit Raytracing aus?
+                </h1>
+                <p data-i18n="heroDesc" class="text-zinc-300 text-base sm:text-lg leading-relaxed font-normal mb-6">
+                    Ein unabhängiges Fan-Projekt: Interaktive Vorher-Nachher-Vergleiche zeigen, wie realistische Lichtstimmungen, tiefe Schatten und Spiegelungen die Atmosphäre auf der Kluft der Beschwörer verändern würden.
+                </p>
+                
+                <!-- Ehrlicher Fan-Projekt-Hinweis -->
+                <div class="inline-flex items-center space-x-2.5 bg-nv-card/90 border-l-2 border-nv-green px-4 py-2.5 text-xs sm:text-sm text-zinc-300 rounded-r">
+                    <span data-i18n="infoLabel" class="text-nv-green font-bold uppercase tracking-wider">Info:</span>
+                    <span data-i18n="infoText">Kein Echtzeit-Raytracing im Spiel – visuelles Fan-Konzept anhand gerenderter Bildvergleiche.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hauptbereich: Vorher-Nachher-Vergleiche -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-8 py-12 sm:py-16">
+        <div id="comparisons-grid" class="space-y-16 sm:space-y-24">
+            <!-- Inhalte werden per JavaScript gerendert -->
+        </div>
+    </main>
+
+    <!-- Footer im NVIDIA-Layout -->
+    <footer class="bg-nv-dark/90 border-t border-nv-border py-10 px-4 sm:px-8 mt-auto">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-nv-muted">
+            <div class="flex items-center space-x-2">
+                <span class="w-2 h-2 bg-nv-green inline-block"></span>
+                <span class="font-bold text-white uppercase tracking-wider">League RTX</span>
+                <span data-i18n="footerTag">— Unabhängiges Fan-Projekt</span>
+            </div>
+            <p data-i18n="footerDisclaimer" class="max-w-xl sm:text-right leading-relaxed">
+                Dieses Projekt steht in keiner Verbindung zu Riot Games oder NVIDIA. Alle verwendeten Marken und Spielinhalte gehören ihren jeweiligen Eigentümern.
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript zur Verwaltung der Vergleiche & Sprachen -->
+    <script>
+        let currentLang = 'de';
+
+        /**
+         * Übersetzungen für UI-Texte (Deutsch & Englisch)
+         */
+        const uiTranslations = {
+            de: {
+                navSubtitle: "Community Fan-Projekt",
+                countSingular: "Vergleich",
+                countPlural: "Vergleiche",
+                heroEyebrow: "Visual Concept & Lighting Study",
+                heroTitle: "Wie sähe League of Legends mit Raytracing aus?",
+                heroDesc: "Ein unabhängiges Fan-Projekt: Interaktive Vorher-Nachher-Vergleiche zeigen, wie realistische Lichtstimmungen, tiefe Schatten und Spiegelungen die Atmosphäre auf der Kluft der Beschwörer verändern würden.",
+                infoLabel: "Info:",
+                infoText: "Kein Echtzeit-Raytracing im Spiel – visuelles Fan-Konzept anhand gerenderter Bildvergleiche.",
+                badgeOriginal: "Original",
+                badgeRtx: "RTX Konzept",
+                dragHint: "Regler ziehen zum Vergleichen",
+                footerTag: "— Unabhängiges Fan-Projekt",
+                footerDisclaimer: "Dieses Projekt steht in keiner Verbindung zu Riot Games oder NVIDIA. Alle verwendeten Marken und Spielinhalte gehören ihren jeweiligen Eigentümern."
+            },
+            en: {
+                navSubtitle: "Community Fan Project",
+                countSingular: "Comparison",
+                countPlural: "Comparisons",
+                heroEyebrow: "Visual Concept & Lighting Study",
+                heroTitle: "What if League of Legends had Ray Tracing?",
+                heroDesc: "An independent fan project: Interactive before-and-after comparisons showcase how realistic lighting, deep shadows, and reflections would transform Summoner's Rift.",
+                infoLabel: "Note:",
+                infoText: "Not real-time in-game ray tracing — visual fan concept based on rendered image comparisons.",
+                badgeOriginal: "Original",
+                badgeRtx: "RTX Concept",
+                dragHint: "Drag slider to compare",
+                footerTag: "— Independent Fan Project",
+                footerDisclaimer: "This project is not affiliated with Riot Games or NVIDIA. All trademarks and game assets belong to their respective owners."
+            }
+        };
+
+        /**
+         * Liste aller Vorher-Nachher-Vergleiche (zweisprachig).
+         */
+        const rtxComparisons = [
+            {
+                id: "01",
+                de: {
+                    tag: "Szenenvergleich 01",
+                    title: "Kluft der Beschwörer — Licht & Atmosphäre",
+                    description: "Bewege den Regler, um die Standard-Optik von League of Legends mit dem RTX-Fan-Konzept zu vergleichen."
+                },
+                en: {
+                    tag: "Scene Comparison 01",
+                    title: "Summoner's Rift — Lighting & Atmosphere",
+                    description: "Move the slider to compare standard League of Legends visuals with the RTX fan concept."
+                },
+                embedUrl: "https://cdn.knightlab.com/libs/juxtapose/latest/embed/index.html?uid=5cad75b6-e032-11f1-ba1b-0e6f42328d7d"
+            },
+            {
+                id: "02",
+                de: {
+                    tag: "Szenenvergleich 02",
+                    title: "Kluft der Beschwörer — Detail- & Schattenstudie",
+                    description: "Vergleich zwischen der klassischen Spielgrafik und der überarbeiteten Beleuchtung im RTX-Konzept."
+                },
+                en: {
+                    tag: "Scene Comparison 02",
+                    title: "Summoner's Rift — Detail & Shadow Study",
+                    description: "Comparison between classic in-game graphics and the reimagined lighting in the RTX concept."
+                },
+                embedUrl: "https://cdn.knightlab.com/libs/juxtapose/latest/embed/index.html?uid=ce82b850-e03b-11f1-ba1b-0e6f42328d7d"
+            }
+        ];
+
+        /**
+         * Wechselt die Sprache zwischen Deutsch ('de') und Englisch ('en').
+         */
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+
+            const t = uiTranslations[lang];
+
+            // Statische UI-Elemente aktualisieren
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key]) {
+                    el.textContent = t[key];
+                }
+            });
+
+            // Button-Styling aktualisieren
+            const btnDe = document.getElementById('btn-de');
+            const btnEn = document.getElementById('btn-en');
+            if (btnDe && btnEn) {
+                if (lang === 'de') {
+                    btnDe.className = "px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded transition-colors bg-nv-green text-black";
+                    btnEn.className = "px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded transition-colors text-zinc-400 hover:text-white";
+                } else {
+                    btnEn.className = "px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded transition-colors bg-nv-green text-black";
+                    btnDe.className = "px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded transition-colors text-zinc-400 hover:text-white";
+                }
+            }
+
+            renderComparisons();
+        }
+
+        /**
+         * Rendert alle Vergleiche im cleanen NVIDIA-Showcase-Stil.
+         */
+        function renderComparisons() {
+            const container = document.getElementById('comparisons-grid');
+            const counterBadge = document.getElementById('counter-badge');
+            const t = uiTranslations[currentLang];
+            
+            if (!container) return;
+
+            if (counterBadge) {
+                const count = String(rtxComparisons.length).padStart(2, '0');
+                counterBadge.textContent = rtxComparisons.length === 1 
+                    ? `${count} ${t.countSingular}` 
+                    : `${count} ${t.countPlural}`;
+            }
+
+            container.innerHTML = rtxComparisons.map(item => {
+                const content = item[currentLang];
+                return `
+                <article class="bg-nv-dark/95 backdrop-blur-sm border border-nv-border rounded-lg overflow-hidden shadow-2xl">
+                    <!-- Kopfbereich der Vergleichs-Karte -->
+                    <div class="p-5 sm:p-7 border-b border-nv-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <span class="text-nv-green font-bold text-xs uppercase tracking-widest block mb-1">
+                                ${content.tag}
+                            </span>
+                            <h2 class="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                                ${content.title}
+                            </h2>
+                        </div>
+                        
+                        <!-- Klarer Hinweis zur Bedienung -->
+                        <div class="flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider bg-nv-black border border-nv-border px-3.5 py-2 rounded self-start sm:self-auto">
+                            <span class="text-zinc-400">${t.badgeOriginal}</span>
+                            <span class="text-nv-green">↔</span>
+                            <span class="text-nv-green">${t.badgeRtx}</span>
+                        </div>
+                    </div>
+
+                    <!-- Responsive 16:9 Container für das Juxtapose-Embed -->
+                    <div class="relative w-full aspect-video bg-black">
+                        <iframe 
+                            src="${item.embedUrl}" 
+                            frameborder="0" 
+                            class="juxtapose absolute inset-0 w-full h-full"
+                            loading="lazy"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+
+                    <!-- Fußzeile der Karte -->
+                    <div class="px-5 py-4 sm:px-7 bg-nv-card/60 border-t border-nv-border flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs sm:text-sm text-zinc-400">
+                        <p>${content.description || ''}</p>
+                        <span class="text-xs font-medium text-nv-muted shrink-0">
+                            ${t.dragHint}
+                        </span>
+                    </div>
+                </article>
+            `}).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', renderComparisons);
+    </script>
+</body>
+</html>
